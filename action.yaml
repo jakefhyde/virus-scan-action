@@ -1,0 +1,9 @@
+name: 'Virus Scan'
+description: 'Use ClamAV to scan for viruses'
+uns:
+  using: "composite"
+  steps:
+    - run: ./scripts/install-scanner.sh
+      shell: bash
+    - run: ./scan.sh
+      shell: bash
