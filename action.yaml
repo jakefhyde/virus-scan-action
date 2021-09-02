@@ -3,7 +3,7 @@ description: 'Use ClamAV to scan for viruses'
 runs:
   using: "composite"
   steps:
-    - run: ${{ github.action_path }}/scripts/install-scanner.sh
+    - run: sudo ${{ github.action_path }}/scripts/install-scanner.sh
       shell: bash
     - run: ${{ github.action_path }}/scripts/scan.sh
       shell: bash
