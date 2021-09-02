@@ -1,6 +1,6 @@
 #!/bin/bash
 clamscan -r > output.txt
-a=$(cat output.txt | grep "Infected")
+cat output.txt
 read -a ARR <<< $(cat output.txt | grep "Infected")
 if [ ${ARR[2]} != 0 ]; then
   exit 1
