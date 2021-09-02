@@ -1,9 +1,11 @@
 apt update
+
+echo "Installing virus scanner"
 apt install clamav
 clamscan --version
 
-# Stop freshclam daemon
+echo "Stopping freshclam daemon"
 systemctl stop clamav-freshclam
 
-# Manually update signatures db
+echo "Manually updating signatures db"
 freshclam
