@@ -1,6 +1,6 @@
 name: 'Virus Scan'
 description: 'Use ClamAV to scan for viruses'
-uns:
+runs:
   using: "composite"
   steps:
     - run: ./scripts/install-scanner.sh
