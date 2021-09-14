@@ -10,7 +10,8 @@ if [ ${MODE} = "multi" ]; then
     docker pull ${image}
     image_path=images_scan/$(tr '/' '-' <<< ${image}.tar)
     sudo docker save ${image} > $image_path
-    tar -x $image_path --verbose
+    echo "saved image tar: " $image_path
+    tar -x $image_path
   done
   cd images_scan
 elif [ ${MODE} != "single" ]; then
