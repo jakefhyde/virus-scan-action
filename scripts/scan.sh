@@ -7,6 +7,7 @@ if [ ${MODE} = "multi" ]; then
   echo ${IMAGES}
   for image in ${IMAGES}
   do
+    ls images_scan
     docker pull ${image}
     image_path=images_scan/$(tr '/' '-' <<< ${image}.tar)
     sudo docker save ${image} > $image_path
