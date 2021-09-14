@@ -8,7 +8,9 @@ if [ ${MODE} = "multi" ]; then
   for image in ${IMAGES}
   do
     docker pull ${image}
-    sudo docker save ${image} > images_scan/$(tr '/' '-' <<< ${image}.tar)
+    image_path=images_scan/$(tr '/' '-' <<< ${image}.tar)
+    sudo docker save ${image} > $image_path
+    tar -x $image_path --verbose
   done
   cd images_scan
 elif [ ${MODE} != "single" ]; then
