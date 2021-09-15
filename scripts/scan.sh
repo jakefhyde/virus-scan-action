@@ -1,31 +1,67 @@
 #!/bin/bash
-MODE=$1
-IMAGES_FILENAME=$2
-if [ ${MODE} = "multi" ]; then
-  # IFS=$'\n' read -ra IMAGES <<< $(cat $IMAGES_FILENAME)
-  readarray -t IMAGES < $IMAGES_FILENAME
+mode=$1
+images_filename=$2
+infected_images=""
+is_infected=false
+
+download_image_layers() {
+  dl_image=$1
+  docker pull ${dl_image}
+  image_path=$(tr '/' '-' <<< ${dl_image}.tar)
+  sudo docker save ${dl_image} > $image_path
+  file ${image_path}
+  echo "saved image tar: " $image_path
+  tar -xvf ${image_path}
+}
+
+scan_current_dir() {
+  clamscan -r > output.txt
+  cat output.txt
+  read -a arr <<< $(cat output.txt | grep "Infected")
+  if [ ${arr[2]} = 0 ]; then
+    is_infected=false
+    return
+  fi
+  is_infected=true
+}
+
+add_infected_image() {
+  infected_image=$1  
+  if [[ ${infected_images} = "" ]]; then
+    infected_images=${image}
+  else
+    infected_images+=",${image}"
+  fi
+}
+
+if [ ${mode} = "multi" ]; then
+  readarray -t images < ${images_filename}
   mkdir images_scan
-  cat $IMAGES_FILENAME
-  echo ${IMAGES}
-  for image in ${IMAGES[@]}
-  do
-    docker pull ${image}
-    image_path=images_scan/$(tr '/' '-' <<< ${image}.tar)
-    sudo docker save ${image} > $image_path
-    file $image_path
-    echo "saved image tar: " $image_path
-    tar -xvf $image_path
-  done
+  cat ${images_filename}
   cd images_scan
-elif [ ${MODE} != "single" ]; then
-  echo "Invalid mode: ${MODE}"
-  exit 1
-fi
-clamscan -r > output.txt
-cat output.txt
-read -a ARR <<< $(cat output.txt | grep "Infected")
-if [ ${ARR[2]} != 0 ]; then
-  exit 1
+  for image in ${images[@]}
+  do
+    download_image_layers ${image}
+    echo "scanning image: ${image}"
+    scan_current_dir ${image}
+    if [[ ${is_infected} = true} ]]; then
+      add_infected_image ${image}
+    fi
+    rm -rf *
+  done
+  if [[ ${infected_images} != "" ]]; then
+    echo "Infected files found: ${infected_files}"
+    exit 1
+  fi
+elif [ ${mode} = "single" ]; then
+  scan_current_dir
+  if [[ ${is_infected} = true ]]; then
+    echo "Virus(es) found"
+    exit 1
+  fi
 else
-  echo "success"
+  echo "Invalid mode: ${mode}"
+  exit 1
 fi
+
+echo "No viruses found"
