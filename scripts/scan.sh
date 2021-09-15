@@ -12,6 +12,12 @@ download_image_layers() {
   file ${image_path}
   echo "saved image tar: " $image_path
   tar -xvf ${image_path}
+  layers=$(jq '.[].Layers' ${dl_image}/manifest.json | grep .tar)
+  for layer in ${layers[@]}; do
+    filename=${layer#\"}
+    filename=${layer%\",}
+    tar -xvf ${dl_image}/filename
+  done
 }
 
 scan_current_dir() {
@@ -34,7 +40,7 @@ add_infected_image() {
   fi
 }
 
-if [ ${mode} = "multi" ]; then
+if [[ ${mode} = "multi" ]]; then
   readarray -t images < ${images_filename}
   mkdir images_scan
   cat ${images_filename}
@@ -53,7 +59,7 @@ if [ ${mode} = "multi" ]; then
     echo "Infected files found: ${infected_files}"
     exit 1
   fi
-elif [ ${mode} = "single" ]; then
+elif [[ ${mode} = "single" ]]; then
   scan_current_dir
   if [[ ${is_infected} = true ]]; then
     echo "Virus(es) found"
