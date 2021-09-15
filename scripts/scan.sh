@@ -7,7 +7,7 @@ is_infected=false
 download_image_layers() {
   dl_image=$1
   docker pull ${dl_image}
-  image_path=$(tr '/' '-' <<< ${dl_image}.tar)
+  image_path=$(tr ':' '-' <<< $(tr '/' '-' <<< ${dl_image}.tar))
   sudo docker save ${dl_image} > $image_path
   file ${image_path}
   echo "saved image tar: " $image_path
