@@ -7,7 +7,7 @@ if [ ${MODE} = "multi" ]; then
   mkdir images_scan
   cat $IMAGES_FILENAME
   echo ${IMAGES}
-  for image in ${IMAGES}
+  for image in ${IMAGES[@]}
   do
     docker pull ${image}
     image_path=images_scan/$(tr '/' '-' <<< ${image}.tar)
