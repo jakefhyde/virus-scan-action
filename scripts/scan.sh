@@ -12,11 +12,11 @@ download_image_layers() {
   file ${image_path}
   echo "saved image tar: " $image_path
   tar -xvf ${image_path}
-  layers=$(jq '.[].Layers' ${dl_image}/manifest.json | grep .tar)
+  layers=$(jq '.[].Layers' manifest.json | grep .tar)
   for layer in ${layers[@]}; do
-    filename=${layer#\"}
-    filename=${layer%\",}
-    tar -xvf ${dl_image}/filename
+    layer_tar_name=${layer#\"}
+    layer_tar_name=${layer_tar_name%\",}
+    tar -xvf ${layer_tar_name}
   done
 }
 
