@@ -5,6 +5,7 @@ if [ ${MODE} = "multi" ]; then
   # IFS=$'\n' read -ra IMAGES <<< $(cat $IMAGES_FILENAME)
   readarray IMAGES < $IMAGES_FILENAME
   mkdir images_scan
+  cat $IMAGES_FILENAME
   echo ${IMAGES}
   for image in ${IMAGES}
   do
