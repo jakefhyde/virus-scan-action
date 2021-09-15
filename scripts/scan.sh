@@ -3,7 +3,7 @@ MODE=$1
 IMAGES_FILENAME=$2
 if [ ${MODE} = "multi" ]; then
   # IFS=$'\n' read -ra IMAGES <<< $(cat $IMAGES_FILENAME)
-  readarray IMAGES < $IMAGES_FILENAME
+  readarray -t IMAGES < $IMAGES_FILENAME
   mkdir images_scan
   cat $IMAGES_FILENAME
   echo ${IMAGES}
