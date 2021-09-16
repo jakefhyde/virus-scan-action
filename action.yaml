@@ -13,5 +13,5 @@ runs:
   steps:
     - run: sudo ${{ github.action_path }}/scripts/install-scanner.sh
       shell: bash
-    - run: ${{ github.action_path }}/scripts/scan.sh ${{inputs.mode}} ${{inputs.image-filename}}
+    - run: sudo ${{ github.action_path }}/scripts/scan.sh ${{inputs.mode}} ${{inputs.image-filename}}
       shell: bash
