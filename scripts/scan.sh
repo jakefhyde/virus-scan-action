@@ -11,13 +11,13 @@ download_image_layers() {
   sudo docker save ${dl_image} > $image_path
   file ${image_path}
   echo "saved image tar: " $image_path
-  tar -xvf ${image_path}
+  sudo tar -xvf ${image_path}
   layers=$(jq '.[].Layers' manifest.json | grep .tar)
   for layer in ${layers[@]}; do
     layer_tar_name=${layer#\"}
     layer_tar_name=${layer_tar_name%,}
     layer_tar_name=${layer_tar_name%\"}
-    tar -xvf ${layer_tar_name}
+    sudo tar -xvf ${layer_tar_name}
   done
 }
 
