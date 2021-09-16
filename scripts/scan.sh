@@ -54,7 +54,7 @@ if [[ ${mode} = "multi" ]]; then
     if [[ ${is_infected} = true} ]]; then
       add_infected_image ${image}
     fi
-    rm -rf *
+    sudo rm -rf *
   done
   if [[ ${infected_images} != "" ]]; then
     echo "Infected files found: ${infected_files}"
