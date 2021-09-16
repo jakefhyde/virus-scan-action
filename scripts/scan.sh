@@ -21,7 +21,7 @@ download_image_layers() {
 }
 
 scan_current_dir() {
-  clamscan -r > output.txt
+  sudo clamscan -r > output.txt
   cat output.txt
   read -a arr <<< $(cat output.txt | grep "Infected")
   if [ ${arr[2]} = 0 ]; then
