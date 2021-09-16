@@ -15,7 +15,7 @@ download_image_layers() {
   layers=$(jq '.[].Layers' manifest.json | grep .tar)
   for layer in ${layers[@]}; do
     layer_tar_name=${layer#\"}
-    layer_tar_name=${layer_tar_name%\",}
+    layer_tar_name=${layer_tar_name%,}
     layer_tar_name=${layer_tar_name%\"}
     tar -xvf ${layer_tar_name}
   done
