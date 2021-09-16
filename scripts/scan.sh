@@ -16,6 +16,7 @@ download_image_layers() {
   for layer in ${layers[@]}; do
     layer_tar_name=${layer#\"}
     layer_tar_name=${layer_tar_name%\",}
+    layer_tar_name=${layer_tar_name%\"}
     tar -xvf ${layer_tar_name}
   done
 }
