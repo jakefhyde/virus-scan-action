@@ -35,9 +35,9 @@ scan_current_dir() {
 add_infected_image() {
   infected_image=$1  
   if [[ ${infected_images} = "" ]]; then
-    infected_images=${image}
+    infected_images=${infected_image}
   else
-    infected_images+=",${image}"
+    infected_images+=",${infected_image}"
   fi
 }
 
@@ -50,14 +50,14 @@ if [[ ${mode} = "multi" ]]; then
   do
     download_image_layers ${image}
     echo "scanning image: ${image}"
-    scan_current_dir ${image}
-    if [[ ${is_infected} = true} ]]; then
+    scan_current_dir
+    if [[ ${is_infected} = true ]]; then
       add_infected_image ${image}
     fi
     sudo rm -rf *
   done
   if [[ ${infected_images} != "" ]]; then
-    echo "Infected files found: ${infected_files}"
+    echo "Infected files found: ${infected_images}"
     exit 1
   fi
 elif [[ ${mode} = "single" ]]; then
