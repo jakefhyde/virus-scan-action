@@ -8,21 +8,21 @@ download_image_layers() {
   dl_image=$1
   docker pull ${dl_image}
   image_path=$(tr ':' '-' <<< $(tr '/' '-' <<< ${dl_image}.tar))
-  sudo docker save ${dl_image} > $image_path
+  docker save ${dl_image} > $image_path
   file ${image_path}
   echo "saved image tar: " $image_path
-  sudo tar -xvf ${image_path}
+  tar -xvf ${image_path}
   layers=$(jq '.[].Layers' manifest.json | grep .tar)
   for layer in ${layers[@]}; do
     layer_tar_name=${layer#\"}
     layer_tar_name=${layer_tar_name%,}
     layer_tar_name=${layer_tar_name%\"}
-    sudo tar -xvf ${layer_tar_name}
+    tar -xvf ${layer_tar_name}
   done
 }
 
 scan_current_dir() {
-  sudo clamscan -r > output.txt
+  clamscan -r > output.txt
   cat output.txt
   read -a arr <<< $(cat output.txt | grep "Infected")
   if [ ${arr[2]} = 0 ]; then
@@ -54,7 +54,7 @@ if [[ ${mode} = "multi" ]]; then
     if [[ ${is_infected} = true ]]; then
       add_infected_image ${image}
     fi
-    sudo rm -rf *
+    rm -rf *
   done
   if [[ ${infected_images} != "" ]]; then
     echo "Infected files found: ${infected_images}"
