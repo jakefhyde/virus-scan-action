@@ -22,10 +22,10 @@ download_image_layers() {
 }
 
 scan_current_dir() {
-  clamscan -r > output.txt
+  clamscan --max-recursion=100 --max-files=0 --max-scantime=0 --block-max --max-filesize=2000M --max-scansize=2000M -r > output.txt
   cat output.txt
-  read -a arr <<< $(cat output.txt | grep "Infected")
-  if [ ${arr[2]} = 0 ]; then
+  read -a arr <<< $(cat output.txt | grep "FOUND")
+  if [ ${#arr[@]} = 0 ]; then
     is_infected=false
     return
   fi
@@ -45,6 +45,7 @@ if [[ ${mode} = "multi" ]]; then
   readarray -t images < ${images_filename}
   mkdir images_scan
   cat ${images_filename}
+  infected_files_file=$(pwd)/infected.txt
   cd images_scan
   for image in ${images[@]}
   do
@@ -53,11 +54,13 @@ if [[ ${mode} = "multi" ]]; then
     scan_current_dir
     if [[ ${is_infected} = true ]]; then
       add_infected_image ${image}
+      echo IMAGE ${image}:$'\n'"$(cat output.txt | grep "FOUND")" >> $infected_files_file
     fi
     rm -rf *
   done
   if [[ ${infected_images} != "" ]]; then
-    echo "Infected files found: ${infected_images}"
+    echo "Infected file(s) found in following image(s): ${infected_images}"
+    cat $infected_files_file
     exit 1
   fi
 elif [[ ${mode} = "single" ]]; then
