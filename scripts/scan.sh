@@ -47,6 +47,7 @@ if [[ ${mode} = "multi" ]]; then
   cat ${images_filename}
   infected_files_file=$(pwd)/infected.txt
   cd images_scan
+  echo NUMBER OF IMAGES ${#arr[@]}
   for image in ${images[@]}
   do
     download_image_layers ${image}
