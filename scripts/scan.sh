@@ -18,7 +18,10 @@ download_image_layers() {
     layer_tar_name=${layer_tar_name%,}
     layer_tar_name=${layer_tar_name%\"}
     tar -xvf ${layer_tar_name}
+    rm ${layer_tar_name}
   done
+  rm ${image_path}
+  docker rmi ${dl_image}
 }
 
 scan_current_dir() {
@@ -56,6 +59,8 @@ if [[ ${mode} = "multi" ]]; then
       add_infected_image ${image}
       echo IMAGE ${image}:$'\n'"$(cat output.txt | grep "FOUND")" >> $infected_files_file
     fi
+    # allows removal when running locally
+    chmod -R +wx ./
     rm -rf *
   done
   if [[ ${infected_images} != "" ]]; then
