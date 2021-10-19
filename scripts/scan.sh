@@ -25,7 +25,7 @@ download_image_layers() {
 }
 
 scan_current_dir() {
-  clamscan --max-recursion=100 --max-files=0 --max-scantime=0 --block-max --max-filesize=2000M --max-scansize=2000M -r > output.txt
+  clamscan --max-recursion=100 --max-files=0 --max-scantime=0 --block-max --max-filesize=4000M --max-scansize=4000M --scan-mail=no -r > output.txt
   cat output.txt
   read -a arr <<< $(cat output.txt | grep "FOUND")
   if [ ${#arr[@]} = 0 ]; then
