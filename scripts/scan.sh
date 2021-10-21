@@ -3,6 +3,7 @@ mode=$1
 images_filename=$2
 infected_images=""
 is_infected=false
+virus_scan_header="----------- VIRUS SCAN SUMMARY -----------"
 
 download_image_layers() {
   dl_image=$1
@@ -25,7 +26,7 @@ download_image_layers() {
 }
 
 scan_current_dir() {
-  clamscan --max-recursion=100 --max-files=0 --max-scantime=0 --block-max --max-filesize=4000M --max-scansize=4000M --scan-mail=no -r > output.txt
+  clamscan --max-recursion=100 --max-files=0 --max-scantime=0 --block-max --max-filesize=2000M --max-scansize=2000M -r > output.txt
   cat output.txt
   read -a arr <<< $(cat output.txt | grep "FOUND")
   if [ ${#arr[@]} = 0 ]; then
@@ -64,6 +65,7 @@ if [[ ${mode} = "multi" ]]; then
     rm -rf *
   done
   if [[ ${infected_images} != "" ]]; then
+    echo $virus_scan_header
     echo "Infected file(s) found in following image(s): ${infected_images}"
     cat $infected_files_file
     exit 1
@@ -79,4 +81,5 @@ else
   exit 1
 fi
 
+echo $virus_scan_header
 echo "No viruses found"
